@@ -1,0 +1,12 @@
+[package]
+name = "ynab"
+version = "0.0.1"
+repository = "https://github.com/Phrohdoh/ynab-rs"
+authors = ["Taryn Hill <taryn@phrohdoh.com>"]
+edition = "2018"
+
+[dependencies]
+serde = "^1"
+serde_derive = "^1"
+serde_json = "^1"
+reqwest = "^0.9"
