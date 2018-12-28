@@ -1,5 +1,7 @@
 use serde_derive::Deserialize;
 
+mod api_types;
+
 #[derive(Deserialize, Debug)]
 pub struct ResponseWrapper<T> {
     pub data: T,
@@ -27,12 +29,70 @@ pub struct ScheduledTransaction {
     pub id: String,
     pub date_first: String,
     pub date_next: String,
-    pub frequency: String,
+    pub frequency: RecurFrequency,
     pub amount: f64,
     pub payee_id: String,
     pub payee_name: String,
     pub category_id: String,
     pub category_name: String,
+}
+
+impl ScheduledTransaction {
+    pub fn new_from_api_model(api_model: api_types::ScheduledTransaction) -> Result<Self, String> {
+        Ok(Self {
+            frequency: RecurFrequency::try_from_str(&api_model.frequency).map_err(|_| format!("Unable to parse `{}` into frequency", api_model.frequency))?,
+            id: api_model.id,
+            date_first: api_model.date_first,
+            date_next: api_model.date_next,
+            amount: api_model.amount,
+            payee_id: api_model.payee_id,
+            payee_name: api_model.payee_name,
+            category_id: api_model.category_id,
+            category_name: api_model.category_name,
+        })
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[derive(PartialEq, Clone, Debug)]
+pub enum RecurFrequency {
+    Never,
+    Daily,
+    Weekly,
+    EveryOtherWeek,
+    TwiceAMonth,
+    Every4Weeks,
+    Monthly,
+    EveryOtherMonth,
+    Every3Months,
+    Every4Months,
+    TwiceAYear,
+    Yearly,
+    EveryOtherYear,
+}
+
+impl RecurFrequency {
+    pub fn try_from_str(s: &str) -> Result<Self, ()> {
+        use self::RecurFrequency::*;
+
+        Ok(match s {
+            "never" => Never,
+            "daily" => Daily,
+            "weekly" => Weekly,
+            "everyOtherWeek" => EveryOtherWeek,
+            "twiceAMonth" => TwiceAMonth,
+            "every4Weeks" => Every4Weeks,
+            "monthly" => Monthly,
+            "everyOtherMonth" => EveryOtherMonth,
+            "every3Months" => Every3Months,
+            "every4Months" => Every4Months,
+            "twiceAYear" => TwiceAYear,
+            "yearly" => Yearly,
+            "everyOtherYear" => EveryOtherYear,
+            _ => return Err(()),
+        })
+    }
 }
 
 pub struct Client {
