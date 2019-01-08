@@ -38,7 +38,7 @@ This project has a number of examples meant to illustrate the capabilities of th
 Currently they all require you to provide an authentication token and the ID of the budget to work with via environment variables.
 
 ```
-$ TOKEN=<your personal access token here> BUDGET_ID=<your budget's ID here> cargo run --example list_scheduled_transactions
+$ TOKEN=<your personal access token here> BUDGET_ID=<your budget's ID here> cargo run --features=rfc5545 --example=icalendar_rrules
 ```
 
 To generate a personal access token go to [your developer settings](https://app.youneedabudget.com/settings/developer) in YNAB.
@@ -67,6 +67,12 @@ ynab = "0.0.1"
 ```
 
 ##### Tip: You can use [`cargo-edit`](https://crates.io/crates/cargo-edit) to easily manage dependencies (for example: `cargo add ynab`)
+
+### Cargo Features
+
+The [cargo features](https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section) this crate provides are as follows:
+
+- `rfc5545`: Adds `RecurFrequency::as_rfc5545_rule` which produces an `rfc5545::RecurrenceRule` (see [the rfc5545 crate](https://github.com/Phrohdoh/rfc5545-rs) for more information)
 
 ### Who uses this crate
 

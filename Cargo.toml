@@ -10,3 +10,8 @@ serde = "^1"
 serde_derive = "^1"
 serde_json = "^1"
 reqwest = "^0.9"
+rfc5545 = { optional = true, git = "https://github.com/Phrohdoh/rfc5545-rs.git" }
+
+[[example]]
+name = "icalendar_rrules"
+required-features = ["rfc5545"]

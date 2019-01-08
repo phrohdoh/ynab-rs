@@ -2,6 +2,9 @@ use serde_derive::Deserialize;
 
 mod api_types;
 
+#[cfg(feature = "rfc5545")]
+mod ext_rfc5545;
+
 #[derive(Deserialize, Debug)]
 pub struct ResponseWrapper<T> {
     pub data: T,
