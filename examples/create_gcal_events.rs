@@ -10,7 +10,7 @@ fn main() {
     let mut google = easyg::Client::new(token, "".into(), "".into(), "".into());
 
     let freqs = [
-        // Freq::Never, // Currently creates invalid RRULEs.
+        Freq::Never,
         Freq::Daily,
         Freq::Weekly,
         Freq::EveryOtherWeek,
@@ -26,7 +26,11 @@ fn main() {
     ];
 
     for freq in &freqs {
-        let rrule = freq.as_rfc5545_rule();
+        let recurrence_rules = freq.as_rfc5545_rule()
+            .into_iter()
+            .map(|r| r.to_string())
+            .collect::<Vec<_>>();
+
         let event = Event {
             id: uuid::Uuid::new_v4().to_simple().to_string(),
             summary: format!("{:?}", freq),
@@ -38,7 +42,8 @@ fn main() {
                 date: "2019-01-09".into(),
                 iana_time_zone: "America/Chicago".into(),
             }),
-            recurrence: vec![rrule.to_string()],
+            recurrence: recurrence_rules.clone(),
+            description: Some(recurrence_rules.join(" # ")),
         };
 
         print!("{} {:?} ... ", event.id, freq);

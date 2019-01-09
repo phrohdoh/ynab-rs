@@ -6,9 +6,12 @@ use rfc5545::{
 };
 
 impl RecurFrequency {
-    pub fn as_rfc5545_rule(&self) -> Rule {
-        match self {
-            RecurFrequency::Never => Rule::new_single(),
+    /// Create a `RecurrenceRule` from the given YNAB frequency if applicable.
+    ///
+    /// Note: `RecurFrequency::Never` will produce `None`.
+    pub fn as_rfc5545_rule(&self) -> Option<Rule> {
+        Some(match self {
+            RecurFrequency::Never => return None,
             RecurFrequency::Daily => Rule::new_with_parts(vec![ Part::Freq(Freq::Daily) ]),
             RecurFrequency::Weekly => Rule::new_with_parts(vec![ Part::Freq(Freq::Weekly) ]),
             RecurFrequency::Monthly => Rule::new_with_parts(vec![ Part::Freq(Freq::Monthly) ]),
@@ -52,6 +55,6 @@ impl RecurFrequency {
                 Part::Freq(Freq::Yearly),
                 Part::Interval(2),
             ]),
-        }
+        })
     }
 }
