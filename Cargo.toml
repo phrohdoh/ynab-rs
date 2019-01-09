@@ -12,6 +12,17 @@ serde_json = "^1"
 reqwest = "^0.9"
 rfc5545 = { optional = true, git = "https://github.com/Phrohdoh/rfc5545-rs.git" }
 
+[dev-dependencies]
+# used in the `create_gcal_events` example
+uuid = { version = "0.7.1", features = ["v4"] }
+
+# used in the `create_gcal_events` example
+easyg = { git = "ssh://git@github.com/Phrohdoh/easyg-rs.git" }
+
 [[example]]
 name = "icalendar_rrules"
+required-features = ["rfc5545"]
+
+[[example]]
+name = "create_gcal_events"
 required-features = ["rfc5545"]
