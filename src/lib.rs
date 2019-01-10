@@ -1,4 +1,5 @@
 use serde_derive::Deserialize;
+use reqwest::Client as HttpClient;
 
 mod api_types;
 
@@ -101,7 +102,6 @@ impl RecurFrequency {
 pub struct Client {
     bearer_token: String,
     budget_id: String,
-    client: reqwest::Client,
 }
 
 impl Client {
@@ -111,15 +111,14 @@ impl Client {
         Self {
             bearer_token,
             budget_id,
-            client: reqwest::Client::new(),
         }
     }
 
-    pub fn get_all_scheduled_transactions(&self) -> Result<Vec<ScheduledTransaction>, ApiError> {
+    pub fn get_all_scheduled_transactions(&self, client: &HttpClient) -> Result<Vec<ScheduledTransaction>, ApiError> {
         let url = format!("{}/budgets/{}/scheduled_transactions/", Self::BASE_URL, self.budget_id);
         let user_agent = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-        let req = self.client.get(&url)
+        let req = client.get(&url)
             .bearer_auth(&self.bearer_token)
             .header(reqwest::header::USER_AGENT, user_agent);
 
