@@ -1,4 +1,4 @@
-use serde_derive::{Serialize, Deserialize};
+use serde::{Serialize, Deserialize};
 use reqwest::Client as HttpClient;
 
 mod api_types;
