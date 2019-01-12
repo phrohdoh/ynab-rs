@@ -1,4 +1,4 @@
-use serde_derive::Deserialize;
+use serde_derive::{Serialize, Deserialize};
 use reqwest::Client as HttpClient;
 
 mod api_types;
@@ -59,7 +59,7 @@ impl ScheduledTransaction {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[derive(PartialEq, Clone, Debug)]
 pub enum RecurFrequency {
