@@ -8,4 +8,5 @@ pub struct ScheduledTransaction {
     pub payee_name: String,
     pub category_id: String,
     pub category_name: String,
+    pub deleted: bool,
 }

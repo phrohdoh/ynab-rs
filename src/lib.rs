@@ -39,6 +39,7 @@ pub struct ScheduledTransaction {
     pub payee_name: String,
     pub category_id: String,
     pub category_name: String,
+    pub deleted: bool,
 }
 
 impl ScheduledTransaction {
@@ -53,6 +54,7 @@ impl ScheduledTransaction {
             payee_name: api_model.payee_name,
             category_id: api_model.category_id,
             category_name: api_model.category_name,
+            deleted: api_model.deleted,
         })
     }
 }
