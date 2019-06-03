@@ -1,0 +1,10 @@
+[package]
+name = "ynab-types"
+version = "0.0.1"
+description = "Data types for the official YNAB API"
+repository = "https://github.com/Phrohdoh/ynab-rs"
+authors = ["Taryn Hill <taryn@phrohdoh.com>"]
+edition = "2018"
+
+[dependencies]
+serde = { version = "^1.0", features = ["derive"], optional = true }

@@ -1,0 +1,7 @@
+[package]
+name = "ynab-cli"
+version = "0.0.1"
+description = "The command-line interface to the YNAB set of crates"
+repository = "https://github.com/Phrohdoh/ynab-rs"
+authors = ["Taryn Hill <taryn@phrohdoh.com>"]
+edition = "2018"
