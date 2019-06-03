@@ -29,7 +29,7 @@ impl Client {
         bearer_token: String
     ) -> Self {
         let base_url = Url::parse(BASE_URL)
-            .expect(format!("`{}` to be a valid URL", stringify!(BASE_URL)));
+            .expect(&format!("`{}` to be a valid URL", stringify!(BASE_URL)));
 
         Self {
             bearer_token,
