@@ -25,7 +25,7 @@ if something goes wrong)
 ### Prerequisite knowledge
 
 Development of this library is done on the "stable" distribution channel using
-Rust `1.31`.
+Rust `1.35`.
 
 ### Building this codebase
 
