@@ -80,7 +80,7 @@ impl Client {
             .map_err(|_| {
                 let err: ApiErrorResponse = serde_json::from_str(&body)
                     .expect(&format!(
-                        "to get back an `{}` shape but got: {:?}",
+                        "to get back an `{}` shape but got:\n\n{}",
                         stringify!(ApiErrorResponse),
                         body,
                     ));
