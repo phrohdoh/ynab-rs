@@ -5,7 +5,7 @@ use serde::{
     Deserialize,
 };
 
-pub type Result<T> = std::result::Result<Response<T>, Error>;
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Response<T> {

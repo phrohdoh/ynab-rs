@@ -8,9 +8,10 @@ edition = "2018"
 [dependencies]
 ynab-types = { path = "./components/ynab-types" }
 ynab-cli = { path = "./components/ynab-cli" }
-serde = { version = "^1", features = ["derive"] }
+ynab-api = { path = "./components/ynab-api" }
 serde_json = "^1"
 reqwest = "^0.9"
+serde = { version = "^1", features = ["derive"] }
 rfc5545 = { optional = true, git = "https://github.com/Phrohdoh/rfc5545-rs.git" }
 
 [dev-dependencies]
