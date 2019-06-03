@@ -21,6 +21,7 @@ struct Opt {
 #[derive(Debug, StructOpt)]
 enum Command {
     #[structopt(name = "get-all-scheduled-transactions")]
+    /// Get all scheduled transactions for a budget
     GetAllScheduledTransactions {
         #[structopt(flatten)]
         bearer_token_opt: BearerTokenOpt,
