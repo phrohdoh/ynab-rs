@@ -19,6 +19,7 @@ mod types;
 pub use types::{
     ApiError,
     ApiErrorResponse,
+    Error,
     Client,
     Response,
 };
@@ -72,12 +73,12 @@ impl Client {
 
         let resp = {
             let body = req.send()?.text()?;
-            let resp: Response<AllScheduledTransactions> = match serde_json::from_str(&body) {
+            let resp: Response<AllScheduledTransactionsResponse> = match serde_json::from_str(&body) {
                 Ok(v) => v,
                 Err(e) => {
                     let err: ApiErrorResponse = serde_json::from_str(&body)
-                        .expect(format!("to get back a `{}` shape", stringify!(ApiErrorResponse)));
-                    return Err(err.error);
+                        .expect(&format!("to get back a `{}` shape", stringify!(ApiErrorResponse)));
+                    return Err(Error::Api(err.error));
                 },
             };
         };

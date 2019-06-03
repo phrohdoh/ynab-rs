@@ -5,7 +5,7 @@ use serde::{
     Deserialize,
 };
 
-pub type Result<T> = std::result::Result<Response<T>, ApiError>;
+pub type Result<T> = std::result::Result<Response<T>, Error>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Response<T> {
@@ -22,6 +22,12 @@ pub struct ApiError {
     pub id: String,
     pub name: String,
     pub detail: String,
+}
+
+impl From<reqwest::Error> for Error {
+    fn from(e: reqwest::Error) -> Self {
+        Error::Http(e)
+    }
 }
 
 #[derive(Debug)]
