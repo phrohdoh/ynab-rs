@@ -1,12 +1,24 @@
-use reqwest::Client as HttpClient;
+use serde::{
+    Serialize,
+    Deserialize,
+};
+
+use reqwest::{
+    Client as HttpClient
+};
+
 use url::Url;
+
+use ynab_types::{
+    ScheduledTransaction,
+};
 
 const BASE_URL: &str = "https://api.youneedabudget.com/v1";
 
 mod types;
 pub use types::{
-    AllScheduledTransactions,
     ApiError,
+    ApiErrorResponse,
     Client,
     Response,
 };
@@ -39,7 +51,13 @@ impl Client {
         &self,
         budget_id: &str,
         http_client: &HttpClient,
-    ) -> types::Result<AllScheduledTransactions> {
+    ) -> types::Result<Vec<ScheduledTransaction>> {
+
+        #[derive(Debug, Clone, Serialize, Deserialize)]
+        struct AllScheduledTransactionsResponse {
+            scheduled_transactions: Vec<ScheduledTransaction>,
+        }
+
         let url = format!(
             "{}/budgets/{}/scheduled_transactions/",
             self.base_url,
@@ -56,8 +74,14 @@ impl Client {
             let body = req.send()?.text()?;
             let resp: Response<AllScheduledTransactions> = match serde_json::from_str(&body) {
                 Ok(v) => v,
-                Err(e) => // TODO: failure to deserialize response
-            }
+                Err(e) => {
+                    let err: ApiErrorResponse = serde_json::from_str(&body)
+                        .expect(format!("to get back a `{}` shape", stringify!(ApiErrorResponse)));
+                    return Err(err.error);
+                },
+            };
         };
+
+        unimplemented!()
     }
 }

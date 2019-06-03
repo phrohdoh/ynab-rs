@@ -5,8 +5,6 @@ use serde::{
     Deserialize,
 };
 
-use ynab_types::ScheduledTransaction;
-
 pub type Result<T> = std::result::Result<Response<T>, ApiError>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -32,12 +30,7 @@ pub enum Error {
     Api(ApiError),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AllScheduledTransactions {
-    pub scheduled_transactions: Vec<ScheduledTransaction>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct Client {
     pub bearer_token: String,
     pub base_url: Url,
