@@ -1,8 +1,10 @@
 # `ynab`
 
-A client library for [You Need A Budget's API](https://api.youneedabudget.com/).
+A software suite for [You Need A Budget's API](https://api.youneedabudget.com/).
 
-[You Need A Budget](https://youneedabudget.com/) (YNAB) is a service with the goal of helping users "stop living paycheck to paycheck, get out of debt, and save more money."
+[You Need A Budget](https://youneedabudget.com/) (YNAB) is a service with the
+goal of helping users "stop living paycheck to paycheck, get out of debt, and
+save more money."
 
 This project is not endorsed or maintained by YNAB.
 
@@ -16,12 +18,14 @@ See [LICENSE](./LICENSE).
 
 ***Not ready for production use!***
 
-- There is little-to-no error handling currently (so your application may abort if something goes wrong)
+- There is little-to-no error handling currently (so your application may abort
+if something goes wrong)
 - There are no automated tests (unit, integration, fuzzing, etc.)
 
 ### Prerequisite knowledge
 
-Development of this library is done on the "stable" distribution channel using Rust `1.31`.
+Development of this library is done on the "stable" distribution channel using
+Rust `1.31`.
 
 ### Building this codebase
 
@@ -33,9 +37,11 @@ $ cargo build
 
 ### Running the examples
 
-This project has a number of examples meant to illustrate the capabilities of the library.
+This project has a number of examples meant to illustrate the capabilities of
+the library.
 
-Currently they all require you to provide an authentication token and the ID of the budget to work with via environment variables.
+Currently they all require you to provide an authentication token and the ID of
+the budget to work with via environment variables.
 
 ```
 $ TOKEN=<your personal access token here> BUDGET_ID=<your budget's ID here> cargo run --features=rfc5545 --example=icalendar_rrules
@@ -43,13 +49,17 @@ $ TOKEN=<your personal access token here> BUDGET_ID=<your budget's ID here> carg
 
 To generate a personal access token go to [your developer settings](https://app.youneedabudget.com/settings/developer) in YNAB.
 
-The budget ID can be found by in the URL while you are viewing your budget as usual.
+The budget ID can be found by in the URL while you are viewing your budget as
+usual.
 
-For example the URL might be https://app.youneedabudget.com/889283ca-e89c-4407-a244-826102837984/budget so the budget ID is `889283ca-e89c-4407-a244-826102837984`.
+For example the URL might be
+https://app.youneedabudget.com/889283ca-e89c-4407-a244-826102837984/budget so
+the budget ID is `889283ca-e89c-4407-a244-826102837984`.
 
 ### Using this project as a dependency
 
-In your project add the following to the `[dependencies]` section of your manifest (`Cargo.toml`):
+In your project add the following to the `[dependencies]` section of your
+manifest (`Cargo.toml`):
 
 ```toml
 ynab = "0.0.1"
@@ -72,7 +82,9 @@ ynab = "0.0.1"
 
 The [cargo features](https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section) this crate provides are as follows:
 
-- `rfc5545`: Adds `RecurFrequency::as_rfc5545_rule` which produces an `rfc5545::RecurrenceRule` (see [the rfc5545 crate](https://github.com/Phrohdoh/rfc5545-rs) for more information)
+- `rfc5545`: Adds `RecurFrequency::as_rfc5545_rule` which produces an
+`rfc5545::RecurrenceRule` (see [the rfc5545
+crate](https://github.com/Phrohdoh/rfc5545-rs) for more information)
 
 ### Who uses this crate
 
