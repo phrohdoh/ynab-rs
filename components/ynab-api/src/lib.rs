@@ -11,6 +11,7 @@ use url::Url;
 
 use ynab_types::{
     ScheduledTransaction,
+    Category,
 };
 
 const BASE_URL: &str = "https://api.youneedabudget.com/v1";
@@ -89,5 +90,38 @@ impl Client {
             })?;
 
         Ok(resp.data.scheduled_transactions)
+    }
+
+    pub fn get_category_by_id(
+        &self,
+        budget_id: &str,
+        category_id: &str,
+        http_client: &HttpClient,
+    ) -> types::Result<ynab_types::Category> {
+        #[derive(Debug, Clone, Serialize, Deserialize)]
+        pub struct CategoryResponse {
+            pub category: Category,
+        }
+
+        let url = format!(
+            "{}/budgets/{}/categories/{}",
+            self.base_url,
+            budget_id,
+            category_id
+        );
+
+        let user_agent = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+
+        let request = http_client.get(&url)
+            .bearer_auth(&self.bearer_token)
+            .header(reqwest::header::USER_AGENT, user_agent);
+
+        let body = request.send()?.text()?;
+        let resp: Response<CategoryResponse> = match serde_json::from_str(&body) {
+            Ok(v) => v,
+            Err(e) => unimplemented!(),
+        };
+
+        Ok(resp.data.category)
     }
 }
