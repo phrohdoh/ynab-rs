@@ -17,6 +17,35 @@ install from.
 
 If you would like to use the [cli] you must build it from source.
 
+## Usage
+
+```
+$ ynab help
+
+ynab-cli 0.0.1
+The opinionated command-line interface to the YNAB set of crates
+
+USAGE:
+    ynab <SUBCOMMAND>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    get-all-scheduled-transactions    Get all scheduled transactions for a budget
+    help                              Prints this message or the help of the given subcommand(s)
+```
+
+You can, for example, get all of your scheduled transactions by running the
+following command, substituting the `budget-id` and `bearer-token` values.
+
+```
+$ ynab get-all-scheduled-transactions \
+    --bearer-token=your-bearer-token \
+    --budget-id=your-budget-id
+```
+
 ## Build from source
 
 Building this software from source can be done by executing the following
