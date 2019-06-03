@@ -1,16 +1,16 @@
-#[cfg(serde)]
+#[cfg(feature = "serde")]
 use serde::{
     Serialize,
     Deserialize,
 };
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Accounts/getAccountById
 pub struct Account {
     pub id: String,
     pub name: String,
-    #[cfg_attr(serde, serde(rename = "type"))]
+    #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub account_type: String,
     pub on_budget: bool,
     pub closed: bool,
@@ -23,7 +23,7 @@ pub struct Account {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Transactions/getTransactionById
 pub struct Transaction {
     pub id: String,
@@ -48,7 +48,7 @@ pub struct Transaction {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct SubTransaction {
     pub id: String,
     pub scheduled_transaction_id: String,
@@ -61,7 +61,7 @@ pub struct SubTransaction {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Scheduled_Transactions/getScheduledTransactionById
 pub struct ScheduledTransaction {
     pub id: String,
@@ -83,7 +83,7 @@ pub struct ScheduledTransaction {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Months/getBudgetMonth
 pub struct Month {
     pub month: String,
@@ -98,7 +98,7 @@ pub struct Month {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Categories/getCategoryById
 pub struct Category {
     pub id: String,
@@ -119,7 +119,7 @@ pub struct Category {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct CategoryGroup {
     pub id: String,
     pub name: String,
@@ -129,7 +129,7 @@ pub struct CategoryGroup {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Payees/getPayeeById
 pub struct Payee {
     pub id: String,
@@ -139,7 +139,7 @@ pub struct Payee {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 ///See https://api.youneedabudget.com/v1#/Payee_Locations/getPayeeLocationById
 pub struct PayeeLocation {
     pub id: String,
@@ -150,7 +150,7 @@ pub struct PayeeLocation {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct CurrencyFormat {
     pub iso_code: String,
     pub example_format: String,
@@ -163,13 +163,13 @@ pub struct CurrencyFormat {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DateFormat {
     pub format: String,
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/Budgets/getBudgetById
 pub struct Budget {
     pub id: String,
@@ -193,14 +193,15 @@ pub struct Budget {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(serde, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 /// See https://api.youneedabudget.com/v1#/User/getUser
 pub struct User {
     pub id: String,
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(serde, Serialize, Deserialize, serde(rename_all = "camelCase"))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub enum RecurFrequency {
     Never,
     Daily,
