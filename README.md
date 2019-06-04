@@ -57,6 +57,10 @@ tooling] (which, typically, only developers do).
 $ cargo build
 ```
 
+## Contribute
+
+For the time being please see the tickets labeled [good first issue].
+
 ## Support the project financially
 
 Please consider financially supporting the project if it has made your life
@@ -69,3 +73,4 @@ of the maintainer.
 [cli]: https://en.wikipedia.org/wiki/Command-line_interface
 [Rust tooling]: https://rustup.rs/
 [becoming a Patron]: https://www.patreon.com/Phrohdoh
+[good first issue]: https://github.com/Phrohdoh/ynab-rs/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
