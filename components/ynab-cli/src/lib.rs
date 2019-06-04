@@ -2,10 +2,12 @@ use std::{
     str::{
         FromStr,
     },
+    fmt,
     io,
 };
 
 use serde::{
+    Serialize,
     Deserialize,
 };
 
@@ -23,6 +25,7 @@ use structopt::{
 
 use ynab_api::{
     Client,
+    Error,
 };
 
 #[derive(Debug, StructOpt)]
@@ -102,27 +105,12 @@ fn run(opt: Opt) {
             budget_id,
             output_format,
         } => {
-            let client = Client::new(bearer_token_opt.bearer_token);
-            let res = client.get_all_scheduled_transactions(
-                &budget_id.to_string(),
-                &http_client
+            get_all_scheduled_transactions(
+                budget_id.to_string(),
+                output_format,
+                &Client::new(bearer_token_opt.bearer_token),
+                &http_client,
             );
-
-            let stxns = res.expect("to not get an error");
-
-            match output_format {
-                Some(OutputFormat::Json) => {
-                    let _ = serde_json::to_writer(io::stdout().lock(), &stxns);
-                    println!();
-                },
-                Some(OutputFormat::JsonPretty) => {
-                    let _ = serde_json::to_writer_pretty(io::stdout().lock(), &stxns);
-                    println!();
-                },
-                Some(OutputFormat::Human) | _ => {
-                    println!("{:#?}", stxns);
-                },
-            }
         },
         Command::GetCategoryById {
             bearer_token_opt,
@@ -130,28 +118,83 @@ fn run(opt: Opt) {
             category_id,
             output_format,
         } => {
-            let client = Client::new(bearer_token_opt.bearer_token);
-            let res = client.get_category_by_id(
-                &budget_id.to_string(), 
-                &category_id.to_string(), 
-                &http_client
+            get_category_by_id(
+                budget_id.to_string(),
+                category_id.to_string(),
+                output_format,
+                &Client::new(bearer_token_opt.bearer_token),
+                &http_client,
             );
+        },
+    }
+}
 
-            let category = res.expect("to not get an error");
+fn get_all_scheduled_transactions(
+    budget_id: impl AsRef<str>,
+    output_format: Option<OutputFormat>,
+    client: &Client,
+    http_client: &HttpClient,
+) {
+    let scheduled_transactions = match client.get_all_scheduled_transactions(
+        budget_id.as_ref(),
+        http_client,
+    ) {
+        Ok(stxns) => stxns,
+        Err(e) => match e {
+            Error::Api(ref e) if e.is_resource_not_found() => {
+                eprintln!("A resource could not be found.  Please double check the values given (such as budget-id).");
+                return;
+            },
+            _ => unimplemented!(),
+        },
+    };
 
-            match output_format {
-                Some(OutputFormat::Json) => {
-                    let _ = serde_json::to_writer(io::stdout().lock() , &category);
-                    println!();
-                },
-                Some(OutputFormat::JsonPretty) => {
-                    let _ = serde_json::to_writer_pretty(io::stdout().lock() , &category);
-                    println!();
-                },
-                Some(OutputFormat::Human) | _ => {
-                    println!("{:#?}", category);
-                },
-            }
+    output(output_format, &scheduled_transactions);
+}
+
+fn get_category_by_id(
+    budget_id: impl AsRef<str>,
+    category_id: impl AsRef<str>,
+    output_format: Option<OutputFormat>,
+    client: &Client,
+    http_client: &HttpClient,
+) {
+    let category = match client.get_category_by_id(
+        budget_id.as_ref(),
+        category_id.as_ref(),
+        http_client,
+    ) {
+        Ok(category) => category,
+        Err(e) => match e {
+            Error::Api(ref e) if e.is_resource_not_found() => {
+                eprintln!("A resource could not be found.  Please double check the values given (such as budget-id).");
+                return;
+            },
+            _ => unimplemented!(),
+        },
+    };
+
+    output(output_format, &category);
+}
+
+fn output<T: fmt::Debug + Serialize>(fmt: Option<OutputFormat>, t: &T) {
+    match fmt {
+        Some(OutputFormat::Json) => {
+            let _ = serde_json::to_writer(
+                io::stdout().lock(),
+                t,
+            );
+            println!();
+        },
+        Some(OutputFormat::JsonPretty) => {
+            let _ = serde_json::to_writer(
+                io::stdout().lock(),
+                t,
+            );
+            println!();
+        },
+        Some(OutputFormat::Human) | None => {
+            println!("{:#?}", t);
         },
     }
 }
