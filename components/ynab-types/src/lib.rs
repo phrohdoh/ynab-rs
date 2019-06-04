@@ -110,12 +110,23 @@ pub struct Category {
     pub budgeted: i64,
     pub activity: i64,
     pub balance: i64,
-    pub goal_type: Option<String>,
+    pub goal_type: Option<GoalType>,
     pub goal_creation_month: Option<String>,
     pub goal_target: i64,
     pub goal_target_month: Option<String>,
     pub goal_percentage_complete: Option<i64>,
     pub deleted: bool,
+}
+
+#[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub enum GoalType {
+    #[cfg_attr(feature = "serde", serde(rename = "TB"))]
+    TargetBalance,
+    #[cfg_attr(feature = "serde", serde(rename = "TBD"))]
+    TargetBalanceByDate,
+    #[cfg_attr(feature = "serde", serde(rename = "MF"))]
+    MonthlyFunding,
 }
 
 #[derive(Debug, Clone)]
