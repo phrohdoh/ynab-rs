@@ -24,6 +24,12 @@ pub struct ApiError {
     pub detail: String,
 }
 
+impl ApiError {
+    pub fn is_resource_not_found(&self) -> bool {
+        self.id == "404.2"
+    }
+}
+
 impl From<reqwest::Error> for Error {
     fn from(e: reqwest::Error) -> Self {
         Error::Http(e)
