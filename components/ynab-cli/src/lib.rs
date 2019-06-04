@@ -126,9 +126,11 @@ fn run(opt: Opt) {
             output_format,
         } => {
             let client = Client::new(bearer_token_opt.bearer_token);
-            let res = client.get_category_by_id(&budget_id.to_string(), 
+            let res = client.get_category_by_id(
+                &budget_id.to_string(), 
                 &category_id.to_string(), 
-                &http_client);
+                &http_client
+            );
             let stxns = res.expect("to not get an error");
 
             match output_format {

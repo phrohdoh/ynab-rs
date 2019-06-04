@@ -99,7 +99,7 @@ impl Client {
         http_client: &HttpClient,
     ) -> types::Result<ynab_types::Category> {
         #[derive(Debug, Clone, Serialize, Deserialize)]
-        pub struct CategoryResponse {
+        pub struct Inner {
             pub category: Category,
         }
 
@@ -116,13 +116,12 @@ impl Client {
             env!("CARGO_PKG_VERSION"),
         );
 
-        let request = http_client.get(&url)
+        let req = http_client.get(&url)
             .bearer_auth(&self.bearer_token)
             .header(reqwest::header::USER_AGENT, user_agent);
 
-        let body = request.send()?.text()?;
-        eprintln!("\n\n{:?}\n\n", body);
-        let resp: Response<CategoryResponse> = serde_json::from_str(&body)
+        let body = req.send()?.text()?;
+        let resp: Response<Inner> = serde_json::from_str(&body)
             .map_err(|e| {
                 eprintln!("{:?}", e);
                 let err: ApiErrorResponse = serde_json::from_str(&body)
