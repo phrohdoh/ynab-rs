@@ -34,6 +34,7 @@ FLAGS:
 
 SUBCOMMANDS:
     get-all-scheduled-transactions    Get all scheduled transactions for a budget
+    get-category-by-id                Get a category in a budget by its ID
     help                              Prints this message or the help of the given subcommand(s)
 ```
 
