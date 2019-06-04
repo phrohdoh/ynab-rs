@@ -187,7 +187,7 @@ fn output<T: fmt::Debug + Serialize>(fmt: Option<OutputFormat>, t: &T) {
             println!();
         },
         Some(OutputFormat::JsonPretty) => {
-            let _ = serde_json::to_writer(
+            let _ = serde_json::to_writer_pretty(
                 io::stdout().lock(),
                 t,
             );
