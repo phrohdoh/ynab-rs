@@ -2,7 +2,7 @@
 name = "ynab"
 version = "0.0.1"
 repository = "https://github.com/Phrohdoh/ynab-rs"
-authors = ["Taryn Hill <taryn@phrohdoh.com>"]
+authors = ["Taryn Hill <taryn@phrohdoh.com>", "Cody Arnold <djdivinity7@gmail.com>"]
 edition = "2018"
 
 [dependencies]
