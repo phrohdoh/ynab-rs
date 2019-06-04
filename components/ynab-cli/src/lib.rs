@@ -47,6 +47,7 @@ enum Command {
     },
 
     #[structopt(name = "get-category-by-id")]
+    /// Get a category in a budget by its ID
     GetCategoryById {
         #[structopt(flatten)]
         bearer_token_opt: BearerTokenOpt,
@@ -102,7 +103,11 @@ fn run(opt: Opt) {
             output_format,
         } => {
             let client = Client::new(bearer_token_opt.bearer_token);
-            let res = client.get_all_scheduled_transactions(&budget_id.to_string(), &http_client);
+            let res = client.get_all_scheduled_transactions(
+                &budget_id.to_string(),
+                &http_client
+            );
+
             let stxns = res.expect("to not get an error");
 
             match output_format {
@@ -131,18 +136,20 @@ fn run(opt: Opt) {
                 &category_id.to_string(), 
                 &http_client
             );
-            let stxns = res.expect("to not get an error");
+
+            let category = res.expect("to not get an error");
 
             match output_format {
                 Some(OutputFormat::Json) => {
-                    let _ = serde_json::to_writer(io::stdout().lock() , &stxns);
+                    let _ = serde_json::to_writer(io::stdout().lock() , &category);
                     println!();
                 },
                 Some(OutputFormat::JsonPretty) => {
-                    let _ = serde_json::to_writer_pretty(io::stdout().lock() , &stxns);
+                    let _ = serde_json::to_writer_pretty(io::stdout().lock() , &category);
+                    println!();
                 },
                 Some(OutputFormat::Human) | _ => {
-                    println!("{:#?}", stxns);
+                    println!("{:#?}", category);
                 },
             }
         },
