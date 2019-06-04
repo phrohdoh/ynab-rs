@@ -78,12 +78,13 @@ impl Client {
         let body = req.send()?.text()?;
 
         let resp: Response<Inner> = serde_json::from_str(&body)
-            .map_err(|_| {
+            .map_err(|e| {
                 let err: ApiErrorResponse = serde_json::from_str(&body)
                     .expect(&format!(
-                        "to get back an `{}` shape but got:\n\n{}",
+                        "failed to deserialize response body into `{}`, got {}: {:?}",
                         stringify!(ApiErrorResponse),
                         body,
+                        e,
                     ));
 
                 Error::Api(err.error)
@@ -99,7 +100,7 @@ impl Client {
         http_client: &HttpClient,
     ) -> types::Result<ynab_types::Category> {
         #[derive(Debug, Clone, Serialize, Deserialize)]
-        pub struct Inner {
+        struct Inner {
             pub category: Category,
         }
 
@@ -123,12 +124,12 @@ impl Client {
         let body = req.send()?.text()?;
         let resp: Response<Inner> = serde_json::from_str(&body)
             .map_err(|e| {
-                eprintln!("{:?}", e);
                 let err: ApiErrorResponse = serde_json::from_str(&body)
                     .expect(&format!(
-                        "to get back an `{}` shape but got:\n\n{}",
+                        "failed to deserialize response body into `{}`, got {}: {:?}",
                         stringify!(ApiErrorResponse),
                         body,
+                        e,
                     ));
 
                 Error::Api(err.error)
