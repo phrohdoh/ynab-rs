@@ -45,6 +45,21 @@ enum Command {
         #[structopt(long = "output-format")]
         output_format: Option<OutputFormat>,
     },
+
+    #[structopt(name = "get-category-by-id")]
+    GetCategoryById {
+        #[structopt(flatten)]
+        bearer_token_opt: BearerTokenOpt,
+
+        #[structopt(long = "budget-id")]
+        budget_id: Uuid,
+
+        #[structopt(long = "category-id")]
+        category_id: Uuid,
+
+        #[structopt(long = "output-format")]
+        output_format: Option<OutputFormat>,
+    },
 }
 
 #[derive(Debug, Deserialize)]
@@ -98,6 +113,31 @@ fn run(opt: Opt) {
                 Some(OutputFormat::JsonPretty) => {
                     let _ = serde_json::to_writer_pretty(io::stdout().lock(), &stxns);
                     println!();
+                },
+                Some(OutputFormat::Human) | _ => {
+                    println!("{:#?}", stxns);
+                },
+            }
+        },
+        Command::GetCategoryById {
+            bearer_token_opt,
+            budget_id,
+            category_id,
+            output_format,
+        } => {
+            let client = Client::new(bearer_token_opt.bearer_token);
+            let res = client.get_category_by_id(&budget_id.to_string(), 
+                &category_id.to_string(), 
+                &http_client);
+            let stxns = res.expect("to not get an error");
+
+            match output_format {
+                Some(OutputFormat::Json) => {
+                    let _ = serde_json::to_writer(io::stdout().lock() , &stxns);
+                    println!();
+                },
+                Some(OutputFormat::JsonPretty) => {
+                    let _ = serde_json::to_writer_pretty(io::stdout().lock() , &stxns);
                 },
                 Some(OutputFormat::Human) | _ => {
                     println!("{:#?}", stxns);
