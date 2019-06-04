@@ -110,17 +110,30 @@ impl Client {
             category_id
         );
 
-        let user_agent = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+        let user_agent = concat!(
+            env!("CARGO_PKG_NAME"), 
+            "/", 
+            env!("CARGO_PKG_VERSION"),
+        );
 
         let request = http_client.get(&url)
             .bearer_auth(&self.bearer_token)
             .header(reqwest::header::USER_AGENT, user_agent);
 
         let body = request.send()?.text()?;
-        let resp: Response<CategoryResponse> = match serde_json::from_str(&body) {
-            Ok(v) => v,
-            Err(e) => unimplemented!(),
-        };
+        eprintln!("\n\n{:?}\n\n", body);
+        let resp: Response<CategoryResponse> = serde_json::from_str(&body)
+            .map_err(|e| {
+                eprintln!("{:?}", e);
+                let err: ApiErrorResponse = serde_json::from_str(&body)
+                    .expect(&format!(
+                        "to get back an `{}` shape but got:\n\n{}",
+                        stringify!(ApiErrorResponse),
+                        body,
+                    ));
+
+                Error::Api(err.error)
+            })?;
 
         Ok(resp.data.category)
     }
