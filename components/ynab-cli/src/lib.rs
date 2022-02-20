@@ -64,6 +64,22 @@ enum Command {
         #[structopt(long = "output-format")]
         output_format: Option<OutputFormat>,
     },
+
+    #[structopt(name = "get-account-by-id")]
+    /// Get an account in a budget by its ID
+    GetAccountById {
+        #[structopt(flatten)]
+        bearer_token_opt: BearerTokenOpt,
+
+        #[structopt(long = "budget-id")]
+        budget_id: Uuid,
+
+        #[structopt(long = "account-id")]
+        account_id: Uuid,
+
+        #[structopt(long = "output-format")]
+        output_format: Option<OutputFormat>,
+    },
 }
 
 #[derive(Debug, Deserialize)]
@@ -126,6 +142,20 @@ fn run(opt: Opt) {
                 &http_client,
             );
         },
+        Command::GetAccountById {
+            bearer_token_opt,
+            budget_id,
+            account_id,
+            output_format,
+        } => {
+            get_account_by_id(
+                budget_id.to_string(),
+                account_id.to_string(),
+                output_format,
+                &Client::new(bearer_token_opt.bearer_token),
+                &http_client,
+            );
+        },
     }
 }
 
@@ -175,6 +205,31 @@ fn get_category_by_id(
     };
 
     output(output_format, &category);
+}
+
+fn get_account_by_id(
+    budget_id: impl AsRef<str>,
+    account_id: impl AsRef<str>,
+    output_format: Option<OutputFormat>,
+    client: &Client,
+    http_client: &HttpClient,
+) {
+    let account = match client.get_account_by_id(
+        budget_id.as_ref(),
+        account_id.as_ref(),
+        http_client,
+    ) {
+        Ok(account) => account,
+        Err(e) => match e {
+            Error::Api(ref e) if e.is_resource_not_found() => {
+                eprintln!("A resource could not be found.  Please double check the values given (such as budget-id).");
+                return;
+            },
+            _ => unimplemented!(),
+        },
+    };
+
+    output(output_format, &account);
 }
 
 fn output<T: fmt::Debug + Serialize>(fmt: Option<OutputFormat>, t: &T) {
