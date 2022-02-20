@@ -14,11 +14,13 @@ pub struct Account {
     pub account_type: String,
     pub on_budget: bool,
     pub closed: bool,
-    pub note: String,
+    pub note: Option<String>,
     pub balance: i64,
     pub cleared_balance: i64,
     pub uncleared_balance: i64,
     pub transfer_payee_id: String,
+    pub direct_import_linked: bool,
+    pub direct_import_in_error: bool,
     pub deleted: bool,
 }
 
