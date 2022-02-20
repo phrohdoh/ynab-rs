@@ -12,6 +12,7 @@ use url::Url;
 use ynab_types::{
     ScheduledTransaction,
     Category,
+    Account,
 };
 
 const BASE_URL: &str = "https://api.youneedabudget.com/v1";
@@ -112,8 +113,8 @@ impl Client {
         );
 
         let user_agent = concat!(
-            env!("CARGO_PKG_NAME"), 
-            "/", 
+            env!("CARGO_PKG_NAME"),
+            "/",
             env!("CARGO_PKG_VERSION"),
         );
 
@@ -136,5 +137,50 @@ impl Client {
             })?;
 
         Ok(resp.data.category)
+    }
+
+    pub fn get_account_by_id(
+        &self,
+        budget_id: &str,
+        account_id: &str,
+        http_client: &HttpClient,
+    ) -> types::Result<ynab_types::Account> {
+        #[derive(Debug, Clone, Serialize, Deserialize)]
+        struct Inner {
+            pub account: Account,
+        }
+
+        let url = format!(
+            "{}/budgets/{}/accounts/{}",
+            self.base_url,
+            budget_id,
+            account_id
+        );
+
+        let user_agent = concat!(
+            env!("CARGO_PKG_NAME"),
+            "/",
+            env!("CARGO_PKG_VERSION"),
+        );
+
+        let req = http_client.get(&url)
+            .bearer_auth(&self.bearer_token)
+            .header(reqwest::header::USER_AGENT, user_agent);
+
+        let body = req.send()?.text()?;
+        let resp: Response<Inner> = serde_json::from_str(&body)
+            .map_err(|e| {
+                let err: ApiErrorResponse = serde_json::from_str(&body)
+                    .expect(&format!(
+                        "failed to deserialize response body into `{}`, got {}: {:?}",
+                        stringify!(ApiErrorResponse),
+                        body,
+                        e,
+                    ));
+
+                Error::Api(err.error)
+            })?;
+
+        Ok(resp.data.account)
     }
 }
